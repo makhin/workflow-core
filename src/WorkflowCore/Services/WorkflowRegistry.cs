@@ -42,6 +42,16 @@ namespace WorkflowCore.Services
             }
         }
 
+        public void RegisterWorkflow(WorkflowDefinition workflowDefinition)
+        {
+            if (_registry.Any(x => x.Item1 == workflowDefinition.Id && x.Item2 == workflowDefinition.Version))
+            {
+                throw new InvalidOperationException($"Workflow {workflowDefinition.Id} version {workflowDefinition.Version} is already registered");
+            }
+
+            _registry.Add(new Tuple<string, int, WorkflowDefinition>(workflowDefinition.Id, workflowDefinition.Version, workflowDefinition));
+        }
+
         public void RegisterWorkflow(IWorkflow workflow)
         {
             if (_registry.Any(x => x.Item1 == workflow.Id && x.Item2 == workflow.Version))
